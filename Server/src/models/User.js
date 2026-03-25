@@ -37,14 +37,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: '09:00', // Default 9:00 AM IST
   },
-  // User's own SMTP / Gmail config for sending reminders
-  smtp: {
-    configured: { type: Boolean, default: false },
-    email:    { type: String, trim: true, lowercase: true },
-    password: { type: String, select: false }, // Gmail App Password
-    host:     { type: String, default: 'smtp.gmail.com' },
-    port:     { type: Number, default: 587 },
-  },
   createdAt: { type: Date, default: Date.now },
 });
 

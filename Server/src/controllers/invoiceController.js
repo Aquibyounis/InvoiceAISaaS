@@ -2,7 +2,7 @@ const Invoice = require('../models/Invoice');
 const ReminderLog = require('../models/ReminderLog');
 const User = require('../models/User');
 const { generateEmail } = require('../services/aiPromptService');
-const { sendEmail } = require('../services/emailService');
+const { sendEmail } = require('../utils/sendEmail');
 
 const FREE_INVOICE_LIMIT = 4;
 
@@ -203,13 +203,12 @@ const sendReminderNow = async (req, res) => {
     // Generate AI email with proper tone based on days overdue
     const { tone, daysOverdue, subject, body } = await generateEmail(invoice, user);
 
-    // Send from user's Gmail if configured, otherwise fallback
+    // Send using centralized Resend API with user's email as reply-to
     const emailResult = await sendEmail({
       to: invoice.clientEmail,
-      toName: invoice.clientName,
       subject,
       body,
-      userSmtp: user.smtp?.configured ? user.smtp : null,
+      replyTo: user.email,
     });
 
     // Log it
@@ -245,7 +244,6 @@ const sendReminderNow = async (req, res) => {
       tone,
       daysOverdue,
       message: `${tone.charAt(0).toUpperCase() + tone.slice(1)} reminder sent to ${invoice.clientEmail}`,
-      previewUrl: emailResult.previewUrl || null,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

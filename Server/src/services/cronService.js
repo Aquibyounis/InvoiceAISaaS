@@ -3,7 +3,7 @@ const Invoice = require('../models/Invoice');
 const User = require('../models/User');
 const ReminderLog = require('../models/ReminderLog');
 const { generateEmail } = require('./aiPromptService');
-const { sendEmail } = require('./emailService');
+const { sendEmail } = require('../utils/sendEmail');
 
 const processOverdueInvoices = async (isManualObj = false) => {
   // express routes might pass req, res as arguments, so ensure we check boolean
@@ -66,12 +66,12 @@ const processOverdueInvoices = async (isManualObj = false) => {
         // Generate AI email
         const { tone, daysOverdue, subject, body } = await generateEmail(invoice, user);
 
-        // Send email
+        // Send email via Resend
         const emailResult = await sendEmail({
           to: invoice.clientEmail,
-          toName: invoice.clientName,
           subject,
           body,
+          replyTo: user.email,
         });
 
         // Log the reminder

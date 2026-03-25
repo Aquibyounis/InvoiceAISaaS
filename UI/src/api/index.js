@@ -31,8 +31,6 @@ export const authAPI = {
   login: (data) => api.post('/auth/login', data),
   getMe: () => api.get('/auth/me'),
   updateProfile: (data) => api.put('/auth/me', data),
-  updateSmtpConfig: (data) => api.put('/auth/smtp-config', data),
-  removeSmtpConfig: () => api.delete('/auth/smtp-config'),
 };
 
 // Invoices
