@@ -14,7 +14,11 @@ const app = express();
 // Security & middleware
 app.use(helmet());
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000'],
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'https://ainvoiceapp.netlify.app'
+  ],
   credentials: true,
 }));
 
@@ -42,8 +46,8 @@ app.use('/api/payments', require('./src/routes/payments'));
 app.use('/api/dashboard', require('./src/routes/dashboard'));
 
 // 404 handler
-app.use((req, res) => {
-  res.status(404).json({ success: false, message: `Route ${req.method} ${req.path} not found.` });
+app.get("/", (req, res) => {
+  res.send("API is live 🚀");
 });
 
 // Global error handler
