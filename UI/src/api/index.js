@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://invoiceaisaas.onrender.com/api',
+  baseURL: 'https://invoiceaisaas-production.up.railway.app/api',
   headers: { 'Content-Type': 'application/json' },
 });
 
